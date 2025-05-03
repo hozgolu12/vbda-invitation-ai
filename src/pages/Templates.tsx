@@ -3,9 +3,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { toast } from "sonner";
 
 const Templates = () => {
   const navigate = useNavigate();
+
+  const handleEditTemplate = (templateName: string) => {
+    toast.info(`Editing ${templateName} template. This feature is coming soon.`);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white p-8">
@@ -25,7 +30,12 @@ const Templates = () => {
             </CardHeader>
             <CardContent>
               <p className="mb-4">Personalized invitations for first contact with recipients.</p>
-              <Button className="bg-blue-600 hover:bg-blue-700">Edit Template</Button>
+              <Button 
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={() => handleEditTemplate("Initial Invitation")}
+              >
+                Edit Template
+              </Button>
             </CardContent>
           </Card>
           
@@ -35,7 +45,12 @@ const Templates = () => {
             </CardHeader>
             <CardContent>
               <p className="mb-4">Gentle reminder sent 5 days after initial invitation.</p>
-              <Button className="bg-blue-600 hover:bg-blue-700">Edit Template</Button>
+              <Button 
+                className="bg-blue-600 hover:bg-blue-700"
+                onClick={() => handleEditTemplate("First Follow-up")}
+              >
+                Edit Template
+              </Button>
             </CardContent>
           </Card>
         </div>
