@@ -8,7 +8,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FileText, Send, Copy } from "lucide-react";
+import { FileText, Send, Copy, Sparkles } from "lucide-react";
+import AiPersonalization from '@/components/AiPersonalization';
 
 const Templates = () => {
   const navigate = useNavigate();
@@ -19,6 +20,7 @@ const Templates = () => {
     content: '',
     variables: ['FirstName', 'Email', 'Organization', 'Achievement', 'Role']
   });
+  const [showAiPersonalization, setShowAiPersonalization] = useState(false);
 
   const handleEditTemplate = (templateName: string, templateType: string) => {
     let templateContent = '';
@@ -56,6 +58,24 @@ Please let us know if you'll be able to join us for this important occasion.
 
 Best regards,
 Viksit Bharat Foundation Team`;
+    } else if (templateType === 'final') {
+      templateSubject = 'Final Reminder: Viksit Bharat Dialogues & Awards 2025';
+      templateContent = `Dear {FirstName},
+
+This is a final reminder about the upcoming Viksit Bharat Dialogues & Awards 2025.
+
+As spaces are filling quickly, we wanted to ensure you have the opportunity to attend this prestigious gathering of industry leaders.
+
+With your impressive background as {Role} at {Organization} and your recent {Achievement}, your insights would be invaluable to our discussions on India's development journey.
+
+Date: June 15, 2025
+Venue: Bharat Mandapam, New Delhi
+RSVP: Please confirm your attendance within the next 48 hours to secure your place.
+
+We hope to see you there.
+
+Kind regards,
+Viksit Bharat Foundation Team`;
     }
 
     setCurrentTemplate({
@@ -66,6 +86,7 @@ Viksit Bharat Foundation Team`;
     });
     
     setIsEditSheetOpen(true);
+    setShowAiPersonalization(false);
   };
 
   const handleSaveTemplate = () => {
@@ -78,6 +99,25 @@ Viksit Bharat Foundation Team`;
       ...currentTemplate,
       content: currentTemplate.content + ` {${variable}}`
     });
+  };
+
+  const handleInsertAiText = (text: string) => {
+    // Insert at beginning of the content after "Dear {FirstName},"
+    const contentParts = currentTemplate.content.split('\n');
+    if (contentParts.length >= 2) {
+      // Insert after the first line
+      contentParts.splice(1, 0, `\n${text}`);
+      setCurrentTemplate({
+        ...currentTemplate,
+        content: contentParts.join('\n')
+      });
+    } else {
+      // Fallback if content format is unexpected
+      setCurrentTemplate({
+        ...currentTemplate,
+        content: currentTemplate.content + '\n' + text
+      });
+    }
   };
 
   return (
@@ -187,8 +227,24 @@ Viksit Bharat Foundation Team`;
                     {variable}
                   </Button>
                 ))}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-yellow-50 border-yellow-200"
+                  onClick={() => setShowAiPersonalization(!showAiPersonalization)}
+                >
+                  <Sparkles className="mr-2 h-4 w-4 text-yellow-500" />
+                  AI Personalization
+                </Button>
               </div>
             </div>
+            
+            {showAiPersonalization && (
+              <div className="mb-6">
+                <AiPersonalization onInsertText={handleInsertAiText} />
+              </div>
+            )}
             
             <div className="flex justify-end gap-3">
               <Button variant="outline" onClick={() => setIsEditSheetOpen(false)}>
